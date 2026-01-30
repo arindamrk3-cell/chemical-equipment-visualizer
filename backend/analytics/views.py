@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Dataset
 from .utils import analyze_csv
+from django.http import FileResponse
+from .pdf_utils import generate_report
+
 
 class CSVUploadView(APIView):
     def post(self, request):
@@ -61,3 +64,14 @@ class HistoryView(APIView):
             })
 
         return Response(data)
+class PDFReportView(APIView):
+    def get(self, request, dataset_id):
+        dataset = get_object_or_404(Dataset, id=dataset_id)
+
+        pdf_buffer = generate_report(dataset)
+
+        return FileResponse(
+            pdf_buffer,
+            as_attachment=True,
+            filename=f"dataset_{dataset_id}_report.pdf"
+        )
