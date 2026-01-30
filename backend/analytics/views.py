@@ -54,6 +54,7 @@ class SummaryView(APIView):
             "summary": dataset.summary
         })
 class HistoryView(APIView):
+    #permission_classes = [AllowAny]
     def get(self, request):
         datasets = Dataset.objects.order_by('-uploaded_at')[:5]
 
