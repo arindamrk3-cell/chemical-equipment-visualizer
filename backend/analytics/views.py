@@ -5,9 +5,11 @@ from .models import Dataset
 from .utils import analyze_csv
 from django.http import FileResponse
 from .pdf_utils import generate_report
+from rest_framework.permissions import AllowAny
 
 
 class CSVUploadView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
         file = request.FILES.get("file")
 
@@ -41,6 +43,7 @@ class CSVUploadView(APIView):
 from django.shortcuts import get_object_or_404
 
 class SummaryView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, dataset_id):
         dataset = get_object_or_404(Dataset, id=dataset_id)
 
