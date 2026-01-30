@@ -47,3 +47,17 @@ class SummaryView(APIView):
             "uploaded_at": dataset.uploaded_at,
             "summary": dataset.summary
         })
+class HistoryView(APIView):
+    def get(self, request):
+        datasets = Dataset.objects.order_by('-uploaded_at')[:5]
+
+        data = []
+        for dataset in datasets:
+            data.append({
+                "dataset_id": dataset.id,
+                "file_name": dataset.file_name,
+                "uploaded_at": dataset.uploaded_at,
+                "summary": dataset.summary
+            })
+
+        return Response(data)
