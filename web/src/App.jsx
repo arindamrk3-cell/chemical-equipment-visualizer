@@ -85,81 +85,107 @@ function App() {
       ],
     }
     : null;
+    const [hover, setHover] = useState(false);
   return (
-    <div style={{ padding: '10%', display: 'grid' }}>
-      <h1>Chemical Equipment Visualizer</h1>
+  <div
+    style={{
+      minHeight: "100vh",
+      width: "100%",
+      background: "#181818",
+      color: "white",
+      padding: "40px 16px",
+    }}
+  >
+   
+    <div
+      style={{
+        maxWidth: "1100px",
+        margin: "0 auto",  
+      }}
+    >
+    
+      <h1 style={{ textAlign: "center", marginBottom: "30px" }}>
+        Chemical Equipment Visualizer
+      </h1>
 
+      
+      <div
+        style={{
+          background: "#2c2929",
+          borderRadius: "10px",
+          padding: "20px",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "12px",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: "20px",
+        }}
+      >
+        <input
+          type="file"
+          accept=".csv"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
+        
+        <button onMouseEnter={() => setHover(true)}
+  onMouseLeave={() => setHover(false)}
+          onClick={handleUpload}
+          style={{
+            background: hover ? "#1e40af" : "#2563eb",
+    color: "white",
+    padding: "8px 18px",
+    borderRadius: "6px",
+    border: "none",
+    cursor: "pointer",
+          }}
+        >
+          Upload CSV
+        </button>
+      </div>
 
-      <input
-        type="file"
-        accept=".csv"
-        onChange={(e) => setFile(e.target.files[0])}
-      /><br></br>
-
-
-
-      <button onClick={handleUpload}>Upload CSV</button>
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {history.length > 0 && (
-        <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
-          <label>Select Previous Dataset: </label>
-          <select style={{ padding: "8px", maxWidth: "300px" }}
-            onChange={(e) => {
-              const id = e.target.value;
-              fetch(`http://127.0.0.1:8000/api/summary/${id}/`)
-                .then((res) => res.json())
-                .then((data) => setResult(data));
+     
+      {result && (
+        <>
+          <div
+            style={{
+              background: "#2a2a2a",
+              borderRadius: "10px",
+              padding: "16px",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: "16px",
+              marginBottom: "30px",
             }}
           >
-            <option value="">-- Select --</option>
-            {history.map((item) => (
-              <option key={item.dataset_id} value={item.dataset_id}>
-                {item.file_name} ({item.dataset_id})
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-      {result && (
-        <div style={{ display: 'grid' }}>
-          <h2>Summary</h2>
-
-          <div style={{
-            display: "flex", gap: "20px", flexWrap: "wrap",
-            justifyContent: "space-between",
-          }}>
-            <div style={cardStyle}>
-              <h3>Total Equipment</h3>
-              <p>{result.summary.total_equipment}</p>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>Avg Flowrate</h3>
-              <p>{result.summary.avg_flowrate.toFixed(2)}</p>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>Avg Pressure</h3>
-              <p>{result.summary.avg_pressure.toFixed(2)}</p>
-            </div>
-
-            <div style={cardStyle}>
-              <h3>Avg Temperature</h3>
-              <p>{result.summary.avg_temperature.toFixed(2)}</p>
+            <div>Total Equipment:<b> {result.summary.total_equipment}</b></div>
+            <div>Avg Flowrate: <b>{result.summary.avg_flowrate.toFixed(2)}</b></div>
+            <div>Avg Pressure: <b>{result.summary.avg_pressure.toFixed(2)}</b></div>
+            <div>
+              Avg Temperature:<b>{" "}
+              {result.summary.avg_temperature.toFixed(2)}</b>
             </div>
           </div>
-          {chartData && (
-            <div style={{ marginTop: "40px", maxWidth: "800px", width: "100%", }}>
-              <h2>Equipment Type Distribution</h2>
-              <Bar data={chartData} />
-            </div>
-          )}
 
-        </div>
+          <div
+            style={{
+              background: "#343333",
+              borderRadius: "10px",
+              padding: "20px",
+            }}
+          >
+            <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+              Equipment Type Distribution
+            </h2>
+            <Bar data={chartData} />
+          </div>
+        </>
       )}
     </div>
-  );
+  </div>
+);
+
+
 }
 
 export default App;
