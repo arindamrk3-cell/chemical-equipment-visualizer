@@ -64,13 +64,7 @@ function App() {
       setError("Upload failed");
     }
   };
-  const cardStyle = {
-    background: "#414040",
-    padding: "20px",
-    borderRadius: "8px",
-    flex: "1 1 200px",
-    textAlign: "center",
-  };
+  
   const chartData = result
     ? {
       labels: Object.keys(result.summary.equipment_type_distribution),
